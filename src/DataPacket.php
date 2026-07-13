@@ -33,12 +33,16 @@ abstract class DataPacket implements Packet{
 	public int $senderSubId = 0;
 	public int $recipientSubId = 0;
 
+	/** @var array<class-string, string> */
+	private static array $nameCache = [];
+
 	public function pid() : int{
 		return $this::NETWORK_ID;
 	}
 
 	public function getName() : string{
-		return (new \ReflectionClass($this))->getShortName();
+		$class = static::class;
+		return self::$nameCache[$class] ??= (new \ReflectionClass($class))->getShortName();
 	}
 
 	public function canBeSentBeforeLogin() : bool{
